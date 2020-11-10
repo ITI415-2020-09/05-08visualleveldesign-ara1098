@@ -47,7 +47,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
         public TextMeshProUGUI countText;
         public TextMeshProUGUI Timer;
         public TextMeshProUGUI EndText;
-
+        public AudioClip collectSound;
+        public AudioSource audioS;
+        public AudioClip newMusic;
+        public AudioSource mainAudioS;
+        private int steppedOn;
         // Use this for initialization
         private void Start()
         {
@@ -63,6 +67,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
 			m_MouseLook.Init(transform , m_Camera.transform);
             count = 0;
             time = 0;
+            steppedOn = 0;
         }
 
 
@@ -105,8 +110,20 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if(other.gameObject.CompareTag("Collectible"))
             {
                 other.gameObject.SetActive(false);
+                audioS.PlayOneShot(collectSound);
                 count = count + 1;
                 SetCountText();
+
+            }
+            if (other.gameObject.CompareTag("Next Track"))
+            {
+                steppedOn = steppedOn + 1;
+                if(steppedOn == 1)
+                {
+                    mainAudioS.clip = newMusic;
+                    mainAudioS.Play();
+                }
+
             }
         }
         void SetCountText()
