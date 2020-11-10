@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 using UnityStandardAssets.Utility;
 using Random = UnityEngine.Random;
+using TMPro;
 
 namespace UnityStandardAssets.Characters.FirstPerson
 {
@@ -41,6 +42,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private float m_NextStep;
         private bool m_Jumping;
         private AudioSource m_AudioSource;
+        private int count;
+        private float time;
+        public TextMeshProUGUI countText;
+        public TextMeshProUGUI Timer;
+        public TextMeshProUGUI EndText;
 
         // Use this for initialization
         private void Start()
@@ -55,12 +61,23 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_Jumping = false;
             m_AudioSource = GetComponent<AudioSource>();
 			m_MouseLook.Init(transform , m_Camera.transform);
+            count = 0;
+            time = 0;
         }
 
 
         // Update is called once per frame
         private void Update()
         {
+            time = time + Time.deltaTime;
+            Timer.text = "Time: " + (Mathf.FloorToInt(time/60)).ToString() + ":" + (Mathf.FloorToInt(time%60)).ToString();
+            
+            if(time>120)
+            {
+                countText.text = "";
+                Timer.text = "";
+                EndText.text = "you found " + count + " out of 25 collectibles";
+            }
             RotateView();
             // the jump state needs to read here to make sure it is not missed
             if (!m_Jump)
@@ -88,7 +105,14 @@ namespace UnityStandardAssets.Characters.FirstPerson
             if(other.gameObject.CompareTag("Collectible"))
             {
                 other.gameObject.SetActive(false);
+                count = count + 1;
+                SetCountText();
             }
+        }
+        void SetCountText()
+        {
+            countText.text = "Count: " + count.ToString();
+
         }
         private void PlayLandingSound()
         {
