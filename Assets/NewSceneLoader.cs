@@ -16,4 +16,10 @@ public class NewSceneLoader : MonoBehaviour
         SceneManager.LoadScene("02-Interiors");
 
     }
+
+    public void LoadPrototype()
+    {
+        SceneManager.LoadScene("03-Prototype2");
+
+    }
 }
